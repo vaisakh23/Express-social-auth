@@ -9,9 +9,9 @@ app = express();
 app.set("views", __dirname + "/views");
 
 const hbs = create({
-    layoutsDir: __dirname + "/views",
-    defaultLayout: "layout",
-    extname: ".hbs"
+  layoutsDir: __dirname + "/views",
+  defaultLayout: "layout",
+  extname: ".hbs",
 });
 app.set("view engine", ".hbs");
 app.engine(".hbs", hbs.engine);
@@ -24,5 +24,5 @@ app.use("/user", usersRouter);
 //     res.send(result)
 // })
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`server started on port ${3000}`));
