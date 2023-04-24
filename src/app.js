@@ -4,18 +4,20 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 
 require("dotenv").config();
+require("./db")
 
 app = express();
 app.set("views", __dirname + "/views");
 
 const hbs = create({
   layoutsDir: __dirname + "/views",
+  partialsDir: __dirname + "/views/partials",
   defaultLayout: "layout",
   extname: ".hbs",
 });
 app.set("view engine", ".hbs");
 app.engine(".hbs", hbs.engine);
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true }))
 
 app.use("/", indexRouter);
 app.use("/user", usersRouter);
