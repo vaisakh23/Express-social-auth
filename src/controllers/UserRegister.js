@@ -1,6 +1,7 @@
 const User = require("../models/User");
+const bcrypt = require("bcryptjs")
 
-const userRegister = (req, res) => {
+const userRegister = async (req, res) => {
   const { email, password } = req.body;
   const errors = [];
   if (!email || !password) {
@@ -13,7 +14,8 @@ const userRegister = (req, res) => {
       password,
     });
   }
-  User({email, password}).save()
+  const passwordHash = await bcrypt.hash(password, 10)
+  User({email: email, password: passwordHash}).save()
     .catch((err) => console.log(err))
 
   return res.redirect("/user/login");
