@@ -16,8 +16,14 @@ const userRegister = async (req, res) => {
   }
   const passwordHash = await bcrypt.hash(password, 10)
   User({email: email, password: passwordHash}).save()
-    .catch((err) => console.log(err))
+    .then((_) => {
+      req.flash("success_msg", "account created succesfully")
+      return res.redirect("/user/login");
+    })
+    .catch((err) => {
+      req.flash("error_msg", "account creation failed")
+      res.redirect("user/register")
+    })
 
-  return res.redirect("/user/login");
 };
 module.exports = userRegister

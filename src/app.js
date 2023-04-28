@@ -1,10 +1,13 @@
 const express = require("express");
 const { engine, create } = require("express-handlebars");
+const session = require("express-session");
+const flash = require("connect-flash");
+
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 
 require("dotenv").config();
-require("./db")
+require("./db");
 
 app = express();
 app.set("views", __dirname + "/views");
@@ -17,7 +20,22 @@ const hbs = create({
 });
 app.set("view engine", ".hbs");
 app.engine(".hbs", hbs.engine);
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  session({
+    secret: "secret",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash("success_msg")
+  res.locals.error_msg = req.flash("error_msg")
+  next()
+})
 
 app.use("/", indexRouter);
 app.use("/user", usersRouter);
