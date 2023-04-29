@@ -3,8 +3,8 @@ const { engine, create } = require("express-handlebars");
 const session = require("express-session");
 const flash = require("connect-flash");
 
-const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users");
+const indexRouter = require("./routes/welcome");
+const usersRouter = require("./routes/auth");
 
 require("dotenv").config();
 require("./db");
