@@ -1,8 +1,7 @@
 const express = require("express");
-const { engine, create } = require("express-handlebars");
-const session = require("express-session");
 const flash = require("connect-flash");
-
+const InitialisePassport = require("./passport");
+const InitialiseHandlebars = require("./handlebars");
 const indexRouter = require("./routes/welcome");
 const usersRouter = require("./routes/auth");
 
@@ -10,40 +9,25 @@ require("dotenv").config();
 require("./db");
 
 app = express();
+InitialisePassport(app);
+InitialiseHandlebars(app);
 app.set("views", __dirname + "/views");
-
-const hbs = create({
-  layoutsDir: __dirname + "/views",
-  partialsDir: __dirname + "/views/partials",
-  defaultLayout: "layout",
-  extname: ".hbs",
-});
-app.set("view engine", ".hbs");
-app.engine(".hbs", hbs.engine);
 app.use(express.urlencoded({ extended: true }));
 
-app.use(
-  session({
-    secret: "secret",
-    resave: true,
-    saveUninitialized: true,
-  })
-);
 app.use(flash());
-
 app.use((req, res, next) => {
-  res.locals.success_msg = req.flash("success_msg")
-  res.locals.error_msg = req.flash("error_msg")
-  next()
-})
+  res.locals.errors = []
+  const errors = req.flash()
+  for(err in errors) {
+    if (err) {
+      res.locals.errors.push(errors[err])
+    }
+  }
+  next();
+});
 
 app.use("/", indexRouter);
 app.use("/user", usersRouter);
-
-// app.use("/test", async (req, res) => {
-//     const result = await hbs.renderView(req.app.get("views") + "/welcome.hbs")
-//     res.send(result)
-// })
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`server started on port ${3000}`));
