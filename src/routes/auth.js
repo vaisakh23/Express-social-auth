@@ -1,6 +1,7 @@
 const express = require("express");
 const userRegister = require("../controllers/UserRegister");
 const userLogin = require("../controllers/UserLogin");
+const userLogout = require("../controllers/UserLogout");
 const router = express.Router();
 
 router.get("/register", (req, res) => {
@@ -13,14 +14,5 @@ router.get("/login", (req, res, next) => {
 });
 router.post("/login", userLogin);
 
-router.get("/logout", (req, res, next) => {
-  req.logout((err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      req.flash("error_msg", "logout successfull");
-      return res.redirect("/user/login");
-    }
-  });
-});
+router.get("/logout", userLogout);
 module.exports = router;
